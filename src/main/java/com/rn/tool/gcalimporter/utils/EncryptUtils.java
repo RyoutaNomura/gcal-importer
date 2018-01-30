@@ -10,7 +10,10 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
-public class EncryptlUtils {
+/**
+ * Class for utility of Encryption
+ */
+public class EncryptUtils {
 
   private static final String KEY = "key";
 

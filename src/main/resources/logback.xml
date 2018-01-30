@@ -3,26 +3,36 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://ch.qos.logback/xml/ns/logback"
   xsi:schemaLocation="http://ch.qos.logback/xml/ns/logback http://ch.qos.logback/xml/ns/logback/logback.xsd">
+
+  <property name="classLength" value="40"/>
+
   <appender class="ch.qos.logback.core.ConsoleAppender" name="STDOUT">
     <target>System.out</target>
     <encoder>
-      <pattern>%d{yyyy/MM/dd HH:mm:ss} %-5level %msg%n</pattern>
+      <pattern>%d{yyyy/MM/dd HH:mm:ss} %-5level %-${classLength}c{${classLength}} %msg%n</pattern>
     </encoder>
   </appender>
-  <appender class="ch.qos.logback.core.FileAppender" name="FILE">
+
+  <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="FILE">
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       <fileNamePattern>logs/app.%d{yyyy-MM-dd}.log.tar.gz</fileNamePattern>
       <maxHistory>7</maxHistory>
     </rollingPolicy>
-
     <encoder>
       <charset>UTF-8</charset>
-      <pattern>%d{yyyy/MM/dd HH:mm:ss} %-5level %msg%n</pattern>
+      <pattern>%d{yyyy/MM/dd HH:mm:ss} %-5level %-${classLength}c{${classLength}} %msg%n</pattern>
     </encoder>
   </appender>
 
   <root level="DEBUG">
     <appender-ref ref="STDOUT"/>
-    <!--<appender-ref ref="FILE" />-->
+    <appender-ref ref="FILE"/>
   </root>
+
+  <!--Suppress debug log of ical4j-->
+  <logger level="INFO" name="net.fortuna.ical4j.data.CalendarParserImpl">
+    <appender-ref ref="STDOUT"/>
+    <appender-ref ref="FILE"/>
+  </logger>
+
 </configuration>

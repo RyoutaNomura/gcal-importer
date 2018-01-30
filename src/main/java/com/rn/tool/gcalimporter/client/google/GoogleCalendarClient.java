@@ -10,14 +10,15 @@ import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
 import com.google.common.collect.Maps;
+import com.rn.tool.gcalimporter.client.google.enums.RequestType;
 import com.rn.tool.gcalimporter.entity.EventContainer;
 import com.rn.tool.gcalimporter.entity.impl.EventContainerFactory;
-import com.rn.tool.gcalimporter.entity.impl.EventContainerFactory.EventContainerType;
+import com.rn.tool.gcalimporter.entity.impl.EventContainerType;
 import com.rn.tool.gcalimporter.helper.Counter;
 import com.rn.tool.gcalimporter.utils.DateUtils;
 import com.rn.tool.gcalimporter.utils.GoogleDateUtils;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.time.YearMonth;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -27,7 +28,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import jersey.repackaged.com.google.common.collect.Lists;
-import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
@@ -66,11 +66,13 @@ public class GoogleCalendarClient {
    *
    * @param applicationName Name of application which is used to access to google calendar
    * @param dataStoreDir Path to store credential
+   * @param clientSecret Path to client_secret.json
    */
   public GoogleCalendarClient(@NonNull final String applicationName,
-      @NonNull final File dataStoreDir) {
+      @NonNull final Path clientSecret, @NonNull final Path dataStoreDir) {
     this.calendarService = GoogleCalendarServiceHolder.builder()
         .applicationName(applicationName)
+        .clientSecret(clientSecret)
         .dataStoreDir(dataStoreDir)
         .scopes(SCOPES)
         .timeout(TIME_OUT)
@@ -229,8 +231,7 @@ public class GoogleCalendarClient {
    */
   private <T extends EventContainer> void executeBatch(@NonNull final Calendar calendar,
       @NonNull final String calendarId, @NonNull final Stream<T> stream,
-      @NonNull final int batchSize,
-      @NonNull final Consumer3<Calendar, String, Stream<T>> consumer) {
+      final int batchSize, @NonNull final Consumer3<Calendar, String, Stream<T>> consumer) {
 
     final Counter counter = Counter.create(0);
 
@@ -335,22 +336,6 @@ public class GoogleCalendarClient {
 
     } catch (final IOException e) {
       throw new RuntimeException(e);
-    }
-  }
-
-  /**
-   * Enum to specify which request to execute
-   */
-  public enum RequestType {
-    INSERT("Insert"),
-    UPDATE("Update"),
-    DELETE("Delete"),;
-
-    @Getter
-    private final String val;
-
-    RequestType(String val) {
-      this.val = val;
     }
   }
 }

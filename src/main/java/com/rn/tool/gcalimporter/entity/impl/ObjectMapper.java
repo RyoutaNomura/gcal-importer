@@ -1,14 +1,15 @@
 package com.rn.tool.gcalimporter.entity.impl;
 
 import com.google.api.services.calendar.model.EventDateTime;
+import com.rn.tool.gcalimporter.utils.CalendarComponentUtils;
 import com.rn.tool.gcalimporter.utils.GoogleDateUtils;
 import java.math.BigDecimal;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import lombok.extern.slf4j.Slf4j;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
@@ -16,13 +17,8 @@ import net.fortuna.ical4j.model.PropertyList;
 /**
  * Class of PropertyList of Calendar's mapper
  */
-public class ObjectMapper {
-
-  /**
-   * Date Format of ical
-   */
-  private static final DateTimeFormatter ICAL_DATE_TIME_FORMAT = DateTimeFormatter
-      .ofPattern("yyyyMMdd'T'HHmmss");
+@Slf4j
+class ObjectMapper {
 
   /**
    * Method for mapping single value in {@link PropertyList}
@@ -33,10 +29,16 @@ public class ObjectMapper {
    * @param propValConsumer {@link Consumer} called after value converted
    * @param <E> type of mapped value
    */
-  public static <E> void map(final PropertyList<Property> props, final String propName,
+  private static <E> void map(final PropertyList<Property> props, final String propName,
       final Function<Property, E> mapper, final Consumer<E> propValConsumer) {
-    Optional.ofNullable(props.getProperty(propName))
-        .ifPresent(p -> propValConsumer.accept(mapper.apply(p)));
+    try {
+      Optional.ofNullable(props.getProperty(propName))
+          .ifPresent(p -> propValConsumer.accept(mapper.apply(p)));
+    } catch (RuntimeException e) {
+      log.error("An Error Occurred with following property");
+      log.error(props.toString());
+      throw e;
+    }
   }
 
   /**
@@ -83,7 +85,7 @@ public class ObjectMapper {
         propName,
         p -> GoogleDateUtils.parseAsDttm(
             p.getValue(),
-            ICAL_DATE_TIME_FORMAT,
+            CalendarComponentUtils.ICAL_DATE_TIME_FORMAT,
             ZoneId.of(p.getParameter(Parameter.TZID).getValue())
         ),
         propValConsumer);
@@ -103,8 +105,7 @@ public class ObjectMapper {
         propName,
         p -> GoogleDateUtils.parseAsDate(
             p.getValue(),
-            ICAL_DATE_TIME_FORMAT,
-            ZoneId.of(p.getParameter(Parameter.TZID).getValue())
+            CalendarComponentUtils.ICAL_DATE_FORMAT
         ),
         propValConsumer);
   }

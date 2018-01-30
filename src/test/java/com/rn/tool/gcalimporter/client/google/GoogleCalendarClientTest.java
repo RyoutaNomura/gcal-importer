@@ -7,8 +7,10 @@ import com.google.api.services.calendar.model.Event;
 import com.google.common.collect.Lists;
 import com.rn.tool.gcalimporter.entity.EventContainer;
 import com.rn.tool.gcalimporter.entity.impl.EventContainerFactory;
-import com.rn.tool.gcalimporter.entity.impl.EventContainerFactory.EventContainerType;
+import com.rn.tool.gcalimporter.entity.impl.EventContainerType;
 import com.rn.tool.gcalimporter.utils.GoogleDateUtils;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.YearMonth;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -21,8 +23,9 @@ public class GoogleCalendarClientTest {
 
   private static final String APPLICATION_NAME = GoogleCalendarClientTest.class.getName();
 
-  private static final java.io.File DATA_STORE_DIR = new java.io.File(
-      System.getProperty("user.dir"), "src/main/resources");
+  private static final Path DATA_STORE_DIR = Paths
+      .get(System.getProperty("user.dir"), "src/main/resources");
+  private static final Path CLIENT_SECRET = Paths.get("client_secret.json");
 
   private static String GOOGLE_CALENDAR_ID;
 
@@ -30,7 +33,7 @@ public class GoogleCalendarClientTest {
 
   @BeforeClass
   public static void beforeClass() {
-    client = new GoogleCalendarClient(APPLICATION_NAME, DATA_STORE_DIR);
+    client = new GoogleCalendarClient(APPLICATION_NAME, CLIENT_SECRET, DATA_STORE_DIR);
     GOOGLE_CALENDAR_ID = client.createNewCalendar(ZonedDateTime.now().toString());
   }
 

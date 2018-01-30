@@ -3,7 +3,6 @@ package com.rn.tool.gcalimporter.entity.impl;
 import com.google.api.services.calendar.model.Event;
 import com.google.common.collect.Maps;
 import com.rn.tool.gcalimporter.entity.EventContainer;
-import com.rn.tool.gcalimporter.entity.impl.EventContainerFactory.EventContainerType;
 import com.rn.tool.gcalimporter.utils.CalendarComponentUtils;
 import com.rn.tool.gcalimporter.utils.GoogleDateUtils;
 import java.util.function.BiConsumer;
@@ -135,8 +134,8 @@ abstract class AbstractEventContainerImpl<T extends AbstractEventContainerImpl> 
     return StringUtils.equals(this.event.getDescription(), container.getEvent().getDescription());
   }
 
-  @Override
   @SuppressWarnings("unchecked")
+  @Override
   public T createPatchedEvent(T patch) {
     T copy = (T) EventContainerFactory.create(this.ecType, this.event.clone());
 

@@ -6,6 +6,8 @@ import static org.junit.Assert.fail;
 
 import com.google.api.services.calendar.model.Calendar;
 import com.google.common.collect.Lists;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -18,15 +20,16 @@ public class GoogleCalendarClientCreateTest {
 
   private static final String APPLICATION_NAME = GoogleCalendarClientCreateTest.class.getName();
 
-  private static final java.io.File DATA_STORE_DIR = new java.io.File(
+  private static final Path DATA_STORE_DIR = Paths.get(
       System.getProperty("user.dir"), "src/main/resources");
+  private static final Path CLIENT_SECRET = Paths.get("client_secret.json");
 
   private static final List<String> calendarIds = Lists.newArrayList();
   private static GoogleCalendarClient client;
 
   @BeforeClass
   public static void init() {
-    client = new GoogleCalendarClient(APPLICATION_NAME, DATA_STORE_DIR);
+    client = new GoogleCalendarClient(APPLICATION_NAME, CLIENT_SECRET, DATA_STORE_DIR);
   }
 
   @AfterClass

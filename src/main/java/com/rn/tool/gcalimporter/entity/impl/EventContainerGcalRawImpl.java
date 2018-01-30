@@ -2,7 +2,6 @@ package com.rn.tool.gcalimporter.entity.impl;
 
 import com.google.api.services.calendar.model.Event;
 import com.google.common.collect.Maps;
-import com.rn.tool.gcalimporter.entity.impl.EventContainerFactory.EventContainerType;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 
 /**

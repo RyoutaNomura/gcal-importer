@@ -1,6 +1,6 @@
 package com.rn.tool.gcalimporter.entity;
 
-import com.rn.tool.gcalimporter.entity.impl.EventContainerFactory.EventContainerType;
+import com.rn.tool.gcalimporter.entity.impl.EventContainerType;
 
 /**
  * Class of container which hold iCal based event
