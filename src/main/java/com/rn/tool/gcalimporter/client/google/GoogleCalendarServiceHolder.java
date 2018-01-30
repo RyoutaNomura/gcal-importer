@@ -6,11 +6,12 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.rn.tool.gcalimporter.utils.GoogleAuthorizationUtils;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.security.GeneralSecurityException;
 import java.util.List;
 import lombok.Builder;
+import lombok.NonNull;
 
 /**
  * Class to hold service object's instance of Google Calendar
@@ -23,9 +24,14 @@ class GoogleCalendarServiceHolder {
   private final String applicationName;
 
   /**
+   * Path to client_secret.json
+   */
+  private final Path clientSecret;
+
+  /**
    * Path to store credential
    */
-  private final File dataStoreDir;
+  private final Path dataStoreDir;
 
   /**
    * Access scope of Google Calendar
@@ -43,10 +49,11 @@ class GoogleCalendarServiceHolder {
   private com.google.api.services.calendar.Calendar calendar;
 
   @Builder
-  private GoogleCalendarServiceHolder(final String applicationName, final File dataStoreDir,
-      final List<String> scopes,
-      final int timeout) {
+  private GoogleCalendarServiceHolder(@NonNull final String applicationName,
+      @NonNull final Path clientSecret, @NonNull final Path dataStoreDir,
+      @NonNull final List<String> scopes, @NonNull final int timeout) {
     this.applicationName = applicationName;
+    this.clientSecret = clientSecret;
     this.dataStoreDir = dataStoreDir;
     this.scopes = scopes;
     this.timeout = timeout;
@@ -72,7 +79,7 @@ class GoogleCalendarServiceHolder {
       final HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
       final JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
       final Credential credential = GoogleAuthorizationUtils
-          .authorize(this.dataStoreDir, this.scopes);
+          .authorize(this.clientSecret, this.dataStoreDir, this.scopes);
 
       this.calendar = new com.google.api.services.calendar.Calendar.Builder(
           httpTransport,

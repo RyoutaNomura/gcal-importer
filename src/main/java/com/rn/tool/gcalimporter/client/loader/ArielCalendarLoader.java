@@ -1,8 +1,10 @@
 package com.rn.tool.gcalimporter.client.loader;
 
+import com.google.common.collect.Lists;
 import com.rn.tool.gcalimporter.utils.CalendarComponentUtils;
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.URI;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -11,7 +13,9 @@ import java.util.stream.Collectors;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
-import lombok.RequiredArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
@@ -26,57 +30,51 @@ import org.glassfish.jersey.logging.LoggingFeature;
  * Class of API Client for Ariel Calendar
  */
 @Slf4j
-@RequiredArgsConstructor
+@Builder
 public class ArielCalendarLoader implements CalendarLoader {
 
   /**
-   * Path for authentication
+   * Constant representing Parameter of Target Year Month
    */
-  private static final String AUTH_PATH = "/aqua/api/auth";
-
+  private static final String PARAM_TARGET_YEAR_MONTH = "target";
   /**
-   * Path for access to calendar
+   * Constant representing Parameter of Target Range
    */
-  private static final String ICAL_PATH = "/aqua/api/ical";
-
+  private static final String PARAM_TARGET_RANGE = "range";
   /**
    * Formatter for calender parameter
    */
-  private static final DateTimeFormatter YEAR_MONTH_FORMATTER = DateTimeFormatter
+  @Getter
+  private final DateTimeFormatter yearMonthFormatter = DateTimeFormatter
       .ofPattern("yyyy-MM");
-
   /**
    * URI to connect
    */
-  private final String uri;
-
+  @Getter
+  private final URI uri;
+  /**
+   * Path for authentication
+   */
+  @Getter
+  private final String authPath;
+  /**
+   * Path for access to calendar
+   */
+  @Getter
+  private final String icalPath;
   /**
    * User Name
    */
+  @Getter
   private final String username;
-
   /**
    * Password
    */
   private final String password;
 
-
   @Override
-  public List<CalendarComponent> loadCalendar(final YearMonth yearMonth, final int range) {
-//  public List<CalendarComponent> loadCalendar(final LocalDateTime start, final LocalDateTime end) {
-//  public List<CalendarComponent> loadCalendar(CustomCalendarSetting param) {
-
-//    LocalDateTime start = param.getStartDttm();
-//    LocalDateTime end = param.getEndDttm();
-
-//    // validate arguments
-//    if (Objects.isNull(start)) {
-//      throw new RuntimeException("start is null");
-//    }
-//    if (Objects.isNull(end)) {
-//      throw new RuntimeException("end is null");
-//    }
-
+  public List<CalendarComponent> loadCalendar(@NonNull final YearMonth yearMonth,
+      @NonNull final int range) {
 
     if (Objects.isNull(yearMonth)) {
       throw new RuntimeException("yearMonth is empty");
@@ -89,15 +87,13 @@ public class ArielCalendarLoader implements CalendarLoader {
       throw new RuntimeException("Authentication failed");
     }
 
-//    final YearMonth yearMonth = YearMonth.of(start.getYear(), start.getMonth());
-//    final int range = end.getMonthValue() - start.getMonthValue() + 1;
-
     final WebTarget wt = ClientBuilder.newClient().register(new LoggingFeature())
         .register(HttpAuthenticationFeature.basic(this.username, this.password)).target(this.uri)
-        .path(ICAL_PATH);
+        .path(icalPath)
+        .queryParam(PARAM_TARGET_YEAR_MONTH, yearMonth.format(yearMonthFormatter))
+        .queryParam(PARAM_TARGET_RANGE, range);
 
-    wt.queryParam("target", yearMonth.format(YEAR_MONTH_FORMATTER));
-    wt.queryParam("target_range", range);
+    log.info("Calender data is loading...");
 
     final String iCal = wt.request().get(String.class);
 
@@ -118,17 +114,17 @@ public class ArielCalendarLoader implements CalendarLoader {
         .register(new LoggingFeature())
         .register(HttpAuthenticationFeature.basic(this.username, this.password))
         .target(this.uri)
-        .path(AUTH_PATH)
+        .path(authPath)
         .request()
         .get();
     return StringUtils.contains(res.readEntity(String.class), "OK");
   }
 
   @Override
-  public String getConnectionInformation(final int keyLength) {
-    return new StringBuilder()
-        .append(String.format("%-" + keyLength + "s: %s", "COMPASS URL", this.uri))
-        .append(String.format("%-" + keyLength + "s: %s", "COMPASS User Name", this.username))
-        .toString();
+  public List<String> getConnectionInformation(@NonNull final int keyLength) {
+    return Lists.newArrayList(
+        String.format("%-" + keyLength + "s: %s", "COMPASS URL", this.uri),
+        String.format("%-" + keyLength + "s: %s", "COMPASS User Name", this.username)
+    );
   }
 }

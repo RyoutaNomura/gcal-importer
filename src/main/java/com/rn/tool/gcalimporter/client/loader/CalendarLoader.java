@@ -16,8 +16,6 @@ public interface CalendarLoader {
    * @param range Acquisition range starting from yearMonth
    */
   List<CalendarComponent> loadCalendar(final YearMonth yearMonth, final int range);
-//  List<CalendarComponent> loadCalendar(final LocalDateTime start, final LocalDateTime end);
-//  List<CalendarComponent> loadCalendar(CustomCalendarSetting param);
 
   /**
    * Method for verify authentication
@@ -32,5 +30,5 @@ public interface CalendarLoader {
    * @param keyLength left margin
    * @return String of connection information
    */
-  String getConnectionInformation(final int keyLength);
+  List<String> getConnectionInformation(final int keyLength);
 }

@@ -10,30 +10,37 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
-import com.google.common.io.Resources;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.GeneralSecurityException;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
+/**
+ * Class of utility for Authorization of Google
+ */
 public class GoogleAuthorizationUtils {
 
   /**
-   * Creates an authorized Credential object.
-   *
-   * @return an authorized Credential object.
-   * @throws IOException will be thrown when secret cannot be accessed or HTTP access cannot be
-   * done.
+   * Logger
    */
-  public static Credential authorize(final File dataStoreDir, final List<String> scopes) {
+  private static Logger logger = LoggerFactory.getLogger(GoogleAuthorizationUtils.class);
 
-    try (InputStream in = Resources.getResource("private/client_secret.json").openStream()) {
+  /**
+   * Create an authorized credential object.
+   *
+   * @return an authorized {@link Credential} object.
+   */
+  public static Credential authorize(final Path clientSecret, final Path dataStoreDir,
+      final List<String> scopes) {
 
-      final FileDataStoreFactory dataStoreFactory = new FileDataStoreFactory(dataStoreDir);
+    try (InputStream in = Files.newInputStream(clientSecret)) {
+
+      final FileDataStoreFactory dataStoreFactory = new FileDataStoreFactory(dataStoreDir.toFile());
       final JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
 
       final HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
@@ -48,12 +55,12 @@ public class GoogleAuthorizationUtils {
           .build();
       final Credential credential = new AuthorizationCodeInstalledApp(
           flow, new LocalServerReceiver()).authorize("user");
-      log.info("Credentials saved to " + dataStoreDir.getAbsolutePath());
+      logger.info("Credentials saved to " + dataStoreDir.toAbsolutePath());
 
       return credential;
 
     } catch (final GeneralSecurityException | IOException e) {
-      log.error("An error occurred during authorization", e);
+      logger.error("An error occurred during authorization", e);
       throw new RuntimeException(e);
     }
   }

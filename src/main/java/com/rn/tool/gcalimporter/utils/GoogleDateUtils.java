@@ -13,31 +13,68 @@ import java.util.Date;
 import java.util.TimeZone;
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * Class of utility for Google API Date
+ */
 public class GoogleDateUtils {
 
+  /**
+   * Mathod for converting {@link LocalDateTime} to {@link DateTime}
+   *
+   * @param datetime target
+   * @param zone zone
+   * @return converted {@link DateTime}
+   */
   public static DateTime fromLocalDateTimeToDateTime(final LocalDateTime datetime,
       final ZoneId zone) {
     final ZonedDateTime zdt = datetime.atZone(zone);
     return fromZonedDateTimeToDateTime(zdt);
   }
 
+  /**
+   * Mathod for converting {@link ZonedDateTime} to {@link DateTime}
+   *
+   * @param datetime target
+   * @return converted {@link DateTime}
+   */
   public static DateTime fromZonedDateTimeToDateTime(final ZonedDateTime datetime) {
     final java.util.Date date = Date.from(datetime.toInstant());
     final TimeZone tz = TimeZone.getTimeZone(datetime.getZone());
     return new DateTime(date, tz);
   }
 
+  /**
+   * Method for parsing String as {@link EventDateTime}
+   *
+   * @param text target
+   * @param formatter formatter
+   * @param zone zone
+   * @return converted {@link EventDateTime}
+   */
   public static EventDateTime parseAsDttm(final String text, final DateTimeFormatter formatter,
       final ZoneId zone) {
     final LocalDateTime ldt = LocalDateTime.parse(text, formatter);
     return fromLocalDateTimeToEventDateTime(ldt, zone);
   }
 
+  /**
+   * Method for converting {@link LocalDateTime} to {@link EventDateTime}
+   *
+   * @param datetime target
+   * @param zone zone
+   * @return converted {@link EventDateTime}
+   */
   public static EventDateTime fromLocalDateTimeToEventDateTime(final LocalDateTime datetime,
       final ZoneId zone) {
     return fromZonedDateTimeToEventDateTime(datetime.atZone(zone));
   }
 
+  /**
+   * Method for converting {@link ZonedDateTime} to {@link EventDateTime}
+   *
+   * @param datetime target
+   * @return converted {@link EventDateTime}
+   */
   public static EventDateTime fromZonedDateTimeToEventDateTime(final ZonedDateTime datetime) {
     final java.util.Date date = Date.from(datetime.toInstant());
     final TimeZone tz = TimeZone.getTimeZone(datetime.getZone());
@@ -46,22 +83,48 @@ public class GoogleDateUtils {
 
   }
 
-  public static EventDateTime parseAsDate(final String text, final DateTimeFormatter formatter,
-      final ZoneId zone) {
+  /**
+   * Method for parsing String as {@link EventDateTime}(Date representation)
+   *
+   * @param text target
+   * @param formatter formatter
+   * @return converted {@link EventDateTime}
+   */
+  public static EventDateTime parseAsDate(final String text, final DateTimeFormatter formatter) {
     final LocalDate ldt = LocalDate.parse(text, formatter);
     return fromLocalDateToEventDate(ldt);
   }
 
+  /**
+   * Method for converting {@link LocalDate} to {@link EventDateTime}(Date representation)
+   *
+   * @param ldt target
+   * @return converted {@link EventDateTime}
+   */
   public static EventDateTime fromLocalDateToEventDate(final LocalDate ldt) {
     final DateTime dt = new DateTime(true,
         ldt.atStartOfDay(ZoneId.of("GMT")).toInstant().toEpochMilli(), 0);
     return new EventDateTime().setDate(dt);
   }
 
+  /**
+   * Method for comparing {@link DateTime}
+   *
+   * @param dttm1 A
+   * @param dttm2 B
+   * @return 1 if A is greater than B, 0 if A is equal to B, -1 if A is smaller than B
+   */
   public static int compare(final DateTime dttm1, final DateTime dttm2) {
     return Comparator.comparing(DateTime::getValue).compare(dttm1, dttm2);
   }
 
+  /**
+   * Method for checking existence in target range
+   *
+   * @param yearMonth target range
+   * @param dttm target date to check
+   * @return true if it is contained
+   */
   public static boolean contains(final YearMonth yearMonth, final EventDateTime dttm) {
 
     if (dttm == null) {
@@ -87,6 +150,13 @@ public class GoogleDateUtils {
     return yearMonth.compareTo(eventYearMonth) == 0;
   }
 
+  /**
+   * Method for checking equality of {@link EventDateTime}
+   *
+   * @param a A
+   * @param b B
+   * @return true if A is equal to B
+   */
   public static boolean equals(final EventDateTime a, final EventDateTime b) {
     if ((a == null) && (b == null)) {
       return true;

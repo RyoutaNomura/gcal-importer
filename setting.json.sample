@@ -1,0 +1,13 @@
+{
+  "uri": "",
+  "authPath": "",
+  "icalPath": "",
+  "userName": "",
+  "password": "",
+  "googleCalendarId": "",
+  "clientSecretJsonPath": "",
+  "dataStoreDir": "",
+  "IsSpecifyTargetYearMonth": "",
+  "targetYearMonth": "",
+  "targetRange": ""
+}
