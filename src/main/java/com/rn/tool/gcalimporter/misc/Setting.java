@@ -1,18 +1,18 @@
 package com.rn.tool.gcalimporter.misc;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
 import java.net.URI;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 @Data
 public class Setting {
+
+  private static DateTimeFormatter YEAR_MONTH_FMT = DateTimeFormatter.ofPattern("yyyyMM");
 
   @JsonProperty("authPath")
   private String authPath;
@@ -41,27 +41,26 @@ public class Setting {
   @JsonProperty("IsSpecifyTargetYearMonth")
   private boolean isSpecifyTargetYearMonth;
 
-  private YearMonth targetYearMonth;
+  @JsonProperty("targetYearMonthType")
+  private String targetYearMonthType;
+
+  @JsonProperty("specificTargetYearMonth")
+  private String specificTargetYearMonth;
+
   @JsonProperty("targetRange")
   private int targetRange;
 
-  @JsonGetter("targetYearMonth")
-  public YearMonth getTargetYearMonth() {
-    return this.targetYearMonth;
-  }
-
-  @JsonSetter("targetYearMonth")
-  public void setTargetYearMonth(String targetYearMonth) {
-    if (StringUtils.isEmpty(targetYearMonth)) {
-      this.targetYearMonth = YearMonth.now();
-    } else {
-      DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMM");
-      this.targetYearMonth = YearMonth.parse(targetYearMonth, fmt);
-    }
-  }
-
   public YearMonth getTargetYearMonthValue() {
-    return isSpecifyTargetYearMonth ? targetYearMonth : YearMonth.now();
+    if (isSpecifyTargetYearMonth) {
+      return specificTargetYearMonth != null ? YearMonth.parse(specificTargetYearMonth, YEAR_MONTH_FMT) : YearMonth.now();
+    } else {
+      Optional<ReservedWord> res = ReservedWord.fromString(targetYearMonthType);
+      if (res.isPresent()) {
+        return res.get().getYearMonth();
+      } else {
+        throw new RuntimeException("targetYearMonthType: " + targetYearMonthType + " is not reserved word");
+      }
+    }
   }
 
   @Override

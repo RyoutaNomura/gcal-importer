@@ -8,6 +8,7 @@
   "clientSecretJsonPath": "",
   "dataStoreDir": "",
   "IsSpecifyTargetYearMonth": "",
-  "targetYearMonth": "",
+  "targetYearMonthType": "",
+  "specificTargetYearMonth": "",
   "targetRange": ""
 }
