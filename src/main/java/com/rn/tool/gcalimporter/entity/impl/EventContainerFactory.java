@@ -5,7 +5,7 @@ import com.rn.tool.gcalimporter.entity.EventContainer;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 
 /**
- * Factory Class for Instantination of Implemented Class of {@link EventContainer}
+ * Factory Class for Instantiation of Implemented Class of {@link EventContainer}
  */
 public class EventContainerFactory {
 
