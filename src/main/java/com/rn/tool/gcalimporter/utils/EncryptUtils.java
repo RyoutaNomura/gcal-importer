@@ -9,15 +9,18 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
+import lombok.NonNull;
+import lombok.experimental.UtilityClass;
 
 /**
  * Class for utility of Encryption
  */
+@UtilityClass
 public class EncryptUtils {
 
   private static final String KEY = "key";
 
-  public static byte[] encrypt(final Path dest, final byte[] data) {
+  public static byte[] encrypt(@NonNull final Path dest, @NonNull final byte[] data) {
 
     try {
       final Key sksSpec = new SecretKeySpec(KEY.getBytes(), "Blowfish");
@@ -31,7 +34,7 @@ public class EncryptUtils {
     }
   }
 
-  public static byte[] decrypt(final byte[] data) {
+  public static byte[] decrypt(@NonNull final byte[] data) {
 
     try {
       final Key sksSpec = new SecretKeySpec(KEY.getBytes(), "Blowfish");

@@ -3,6 +3,7 @@ package com.rn.tool.gcalimporter.misc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.nio.file.Path;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -17,7 +18,7 @@ public class SettingFileLoader {
    * @param path Path to Setting File
    * @return Setting File Instance if it Present
    */
-  public static Setting load(Path path) {
+  public static Setting load(@NonNull final Path path) {
 
     try {
       final ObjectMapper mapper = new ObjectMapper();

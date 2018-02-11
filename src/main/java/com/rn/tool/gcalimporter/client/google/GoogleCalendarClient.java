@@ -157,7 +157,7 @@ public class GoogleCalendarClient {
   }
 
   /**
-   * Method for create new calender to Google Calender
+   * Method for create new calendar to Google Calendar
    *
    * @param summary Calendar's summary
    * @return calendarId of created calendar
@@ -177,9 +177,9 @@ public class GoogleCalendarClient {
   }
 
   /**
-   * Method for delete existing calender from Google Calendar
+   * Method for delete existing calendar from Google Calendar
    *
-   * @param id id of the calender to delete
+   * @param id id of the calendar to delete
    */
   public void deleteCalendar(@NonNull final String id) {
     final Calendar calendar = this.calendarService.get();
@@ -196,9 +196,9 @@ public class GoogleCalendarClient {
   }
 
   /**
-   * Method for find calender with calendarId
+   * Method for find calendar with calendarId
    *
-   * @param id id of the calender to find
+   * @param id id of the calendar to find
    * @return result if found
    */
   public Optional<com.google.api.services.calendar.model.Calendar> findCalendar(
@@ -210,7 +210,7 @@ public class GoogleCalendarClient {
       return Optional.of(calendar.calendars().get(id).execute());
 
     } catch (final GoogleJsonResponseException e) {
-      log.warn(e.getLocalizedMessage());
+      log.debug(e.getLocalizedMessage());
       return Optional.empty();
 
     } catch (final IOException e) {

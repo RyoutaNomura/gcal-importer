@@ -1,6 +1,7 @@
 package com.rn.tool.gcalimporter.client.google.enums;
 
 import lombok.Getter;
+import lombok.NonNull;
 
 /**
  * Enum to specify which request to execute
@@ -13,7 +14,7 @@ public enum RequestType {
   @Getter
   private final String val;
 
-  RequestType(String val) {
+  RequestType(@NonNull final String val) {
     this.val = val;
   }
 }

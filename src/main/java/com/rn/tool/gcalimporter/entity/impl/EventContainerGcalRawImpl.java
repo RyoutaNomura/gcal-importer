@@ -2,6 +2,7 @@ package com.rn.tool.gcalimporter.entity.impl;
 
 import com.google.api.services.calendar.model.Event;
 import com.google.common.collect.Maps;
+import lombok.NonNull;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 
 /**
@@ -14,7 +15,7 @@ class EventContainerGcalRawImpl extends AbstractEventContainerImpl<EventContaine
    *
    * @param event event to contain {@link Event}
    */
-  EventContainerGcalRawImpl(Event event) {
+  EventContainerGcalRawImpl(@NonNull final Event event) {
     super(EventContainerType.Raw, event);
     this.initExtendedProperties();
   }
@@ -25,8 +26,8 @@ class EventContainerGcalRawImpl extends AbstractEventContainerImpl<EventContaine
    * @param c CalendarComponent with which generate event and make contain to this object {@link
    * CalendarComponent}
    */
-  EventContainerGcalRawImpl(final CalendarComponent c) {
-    super(EventContainerType.Raw);
+  EventContainerGcalRawImpl(@NonNull final CalendarComponent c) {
+    super(EventContainerType.Raw, c);
     this.initExtendedProperties();
   }
 
@@ -48,12 +49,12 @@ class EventContainerGcalRawImpl extends AbstractEventContainerImpl<EventContaine
 
 
   @Override
-  public boolean hasSameImplContents(final EventContainerGcalRawImpl container) {
+  boolean hasSameImplContents(@NonNull final EventContainerGcalRawImpl container) {
     return true;
   }
 
   @Override
-  public void patchImplContent(EventContainerGcalRawImpl container) {
+  void patchImplContent(@NonNull final EventContainerGcalRawImpl container) {
   }
 
   @Override

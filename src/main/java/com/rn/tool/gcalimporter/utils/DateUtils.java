@@ -4,10 +4,12 @@ import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import lombok.NonNull;
+import lombok.experimental.UtilityClass;
 
 /**
  * Class of Utility for java.time.*
  */
+@UtilityClass
 public class DateUtils {
 
   /**

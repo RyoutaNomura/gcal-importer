@@ -17,25 +17,24 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.GeneralSecurityException;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.NonNull;
+import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Class of utility for Authorization of Google
  */
+@UtilityClass
+@Slf4j
 public class GoogleAuthorizationUtils {
-
-  /**
-   * Logger
-   */
-  private static Logger logger = LoggerFactory.getLogger(GoogleAuthorizationUtils.class);
 
   /**
    * Create an authorized credential object.
    *
    * @return an authorized {@link Credential} object.
    */
-  public static Credential authorize(final Path clientSecret, final Path dataStoreDir,
+  public static Credential authorize(@NonNull final Path clientSecret,
+      @NonNull final Path dataStoreDir,
       final List<String> scopes) {
 
     try (InputStream in = Files.newInputStream(clientSecret)) {
@@ -55,12 +54,12 @@ public class GoogleAuthorizationUtils {
           .build();
       final Credential credential = new AuthorizationCodeInstalledApp(
           flow, new LocalServerReceiver()).authorize("user");
-      logger.info("Credentials saved to " + dataStoreDir.toAbsolutePath());
+      log.info("Credentials saved to " + dataStoreDir.toAbsolutePath());
 
       return credential;
 
     } catch (final GeneralSecurityException | IOException e) {
-      logger.error("An error occurred during authorization", e);
+      log.error("An error occurred during authorization", e);
       throw new RuntimeException(e);
     }
   }

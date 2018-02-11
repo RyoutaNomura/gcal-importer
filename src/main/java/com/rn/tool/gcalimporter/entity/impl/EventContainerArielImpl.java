@@ -1,6 +1,7 @@
 package com.rn.tool.gcalimporter.entity.impl;
 
 import com.google.api.services.calendar.model.Event;
+import lombok.NonNull;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.component.CalendarComponent;
@@ -21,7 +22,7 @@ class EventContainerArielImpl extends AbstractEventContainerImpl<EventContainerA
    *
    * @param c Calendar Object
    */
-  public EventContainerArielImpl(final CalendarComponent c) {
+  EventContainerArielImpl(@NonNull final CalendarComponent c) {
     super(EventContainerType.Ariel, c);
 
     final PropertyList<Property> props = c.getProperties();
@@ -34,17 +35,17 @@ class EventContainerArielImpl extends AbstractEventContainerImpl<EventContainerA
    *
    * @param event Google Calendar Event
    */
-  public EventContainerArielImpl(Event event) {
+  EventContainerArielImpl(@NonNull final Event event) {
     super(EventContainerType.Ariel, event);
   }
 
   @Override
-  public boolean hasSameImplContents(final EventContainerArielImpl container) {
+  boolean hasSameImplContents(@NonNull final EventContainerArielImpl container) {
     return StringUtils.equals(this.findArielId(), container.findArielId());
   }
 
   @Override
-  public void patchImplContent(final EventContainerArielImpl container) {
+  void patchImplContent(@NonNull final EventContainerArielImpl container) {
     this.setArielId(container.findArielId());
   }
 
@@ -75,7 +76,7 @@ class EventContainerArielImpl extends AbstractEventContainerImpl<EventContainerA
    *
    * @param value arielId
    */
-  private void setArielId(String value) {
+  private void setArielId(@NonNull final String value) {
     this.event.getExtendedProperties().getPrivate().put(ARIEL_ID, value);
   }
 
