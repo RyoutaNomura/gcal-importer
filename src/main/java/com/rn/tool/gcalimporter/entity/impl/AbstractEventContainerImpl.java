@@ -7,6 +7,7 @@ import com.rn.tool.gcalimporter.utils.CalendarComponentUtils;
 import com.rn.tool.gcalimporter.utils.GoogleDateUtils;
 import java.util.function.BiConsumer;
 import lombok.Getter;
+import lombok.NonNull;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.component.CalendarComponent;
@@ -46,7 +47,7 @@ abstract class AbstractEventContainerImpl<T extends AbstractEventContainerImpl> 
    *
    * @param ecType actual type {@link EventContainerType}
    */
-  AbstractEventContainerImpl(EventContainerType ecType) {
+  AbstractEventContainerImpl(@NonNull final EventContainerType ecType) {
     this(ecType, new Event());
   }
 
@@ -56,7 +57,7 @@ abstract class AbstractEventContainerImpl<T extends AbstractEventContainerImpl> 
    * @param ecType actual type {@link EventContainerType}
    * @param event event to contain {@link Event}
    */
-  AbstractEventContainerImpl(EventContainerType ecType, Event event) {
+  AbstractEventContainerImpl(@NonNull final EventContainerType ecType, @NonNull final Event event) {
     super();
 
     this.ecType = ecType;
@@ -78,7 +79,7 @@ abstract class AbstractEventContainerImpl<T extends AbstractEventContainerImpl> 
    * @param ecType actual type {@link EventContainerType}
    * @param c calendarComponent with which generated Event to contain {@link CalendarComponent}
    */
-  AbstractEventContainerImpl(EventContainerType ecType, final CalendarComponent c) {
+  AbstractEventContainerImpl(@NonNull final EventContainerType ecType, @NonNull final  CalendarComponent c) {
     this(ecType);
 
     final PropertyList<Property> props = c.getProperties();

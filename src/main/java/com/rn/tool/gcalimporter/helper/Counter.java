@@ -18,7 +18,7 @@ public class Counter {
    *
    * @param initialValue initial value
    */
-  private Counter(long initialValue) {
+  private Counter(final long initialValue) {
     this.i = initialValue;
   }
 
@@ -28,7 +28,7 @@ public class Counter {
    * @param initialValue initial value
    * @return instance of {@link Counter}
    */
-  public static Counter create(long initialValue) {
+  public static Counter create(final long initialValue) {
     return new Counter(initialValue);
   }
 

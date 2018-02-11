@@ -2,15 +2,14 @@ package com.rn.tool.gcalimporter.logic;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.inject.Inject;
 import com.rn.tool.gcalimporter.client.google.GoogleCalendarClient;
-import com.rn.tool.gcalimporter.client.loader.ArielCalendarLoader;
+import com.rn.tool.gcalimporter.client.loader.CalendarLoader;
 import com.rn.tool.gcalimporter.common.Constants;
 import com.rn.tool.gcalimporter.entity.EventContainer;
 import com.rn.tool.gcalimporter.entity.impl.EventContainerFactory;
 import com.rn.tool.gcalimporter.entity.impl.EventContainerType;
 import com.rn.tool.gcalimporter.utils.GoogleDateUtils;
-import java.net.URI;
-import java.nio.file.Paths;
 import java.time.YearMonth;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -26,47 +25,20 @@ import org.apache.commons.lang3.StringUtils;
  * Class for Transferring Calendar from Ariel to Google
  */
 @Slf4j
-public class ArielCalenderTransfer {
-
-  /**
-   * Application Name
-   */
-  private static final String GOOGLE_APPLICATION_NAME = "GCalImporter";
+public class CalendarTransfer {
 
   /**
    * Ariel Calendar Client
    */
-  private final ArielCalendarLoader arielCalendarLoader;
+  @Inject
+  private CalendarLoader calendarLoader;
+
   /**
    * Client of Google Calendar
    */
-  private final GoogleCalendarClient gcalClient;
+  @Inject
+  private GoogleCalendarClient gcalClient;
 
-  /**
-   * Constructor
-   *
-   * @param clientSecret Path for Client Secret File
-   * @param dataStoreDir Destination to store Credential File
-   * @param uri URI to Access
-   * @param authPath Path for Authentication
-   * @param icalPath Path for Acquiring Calendar
-   * @param username User Name
-   * @param password Password
-   */
-  public ArielCalenderTransfer(@NonNull final String clientSecret,
-      @NonNull final String dataStoreDir, @NonNull final URI uri,
-      @NonNull final String authPath, @NonNull final String icalPath,
-      @NonNull final String username, @NonNull final String password) {
-    this.arielCalendarLoader = ArielCalendarLoader.builder()
-        .uri(uri)
-        .authPath(authPath)
-        .icalPath(icalPath)
-        .username(username)
-        .password(password)
-        .build();
-    this.gcalClient = new GoogleCalendarClient(GOOGLE_APPLICATION_NAME, Paths.get(clientSecret),
-        Paths.get(dataStoreDir));
-  }
 
   /**
    * Method for Transferring Calendar from Ariel to Google
@@ -76,13 +48,13 @@ public class ArielCalenderTransfer {
    * @param targetRange Target Range
    */
   @SuppressWarnings("unchecked")
-  public void transfer(@NonNull final String googleCalendarId, @NonNull YearMonth targetYearMonth,
-      @NonNull int targetRange) {
+  public void transfer(@NonNull final String googleCalendarId, final YearMonth targetYearMonth,
+      final int targetRange) {
 
     logParameter(googleCalendarId, targetYearMonth, targetRange);
 
     // Get events from Ariel
-    final Map<String, EventContainer> compassEvents = this.arielCalendarLoader
+    final Map<String, EventContainer> compassEvents = this.calendarLoader
         .loadCalendar(targetYearMonth, targetRange)
         .stream()
         .map(c -> EventContainerFactory.create(EventContainerType.Ariel, c))
@@ -131,7 +103,7 @@ public class ArielCalenderTransfer {
     this.gcalClient.updateEvents(googleCalendarId, eventsToUpdate);
     this.gcalClient.insertEvents(googleCalendarId, eventsToAdd);
 
-    log.info("ArielCalenderTransfer is done");
+    log.info("CalendarTransfer is done");
   }
 
   /**
@@ -142,13 +114,16 @@ public class ArielCalenderTransfer {
    * @param targetRange Target Range
    */
   private void logParameter(@NonNull final String googleCalendarId,
-      @NonNull YearMonth targetYearMonth, @NonNull int targetRange) {
+      @NonNull final YearMonth targetYearMonth, final int targetRange) {
 
-    log.info("ArielCalenderTransfer is executed with following parameter");
+    log.info("CalendarTransfer is executed with following parameter");
     log.info(StringUtils.repeat('-', Constants.SEP_LENGTH));
     log.info("# From: ");
-    log.info("URI: " + this.arielCalendarLoader.getUri());
-    log.info("User: " + this.arielCalendarLoader.getUsername());
+    this.calendarLoader.getConnectionInfo()
+        .entrySet()
+        .stream()
+        .map(entry -> String.format("%s: %s", entry.getKey(), entry.getValue()))
+        .forEach(log::info);
     log.info(StringUtils.EMPTY);
     log.info("# To: ");
     log.info("Google Calendar ID: " + googleCalendarId);
@@ -160,7 +135,7 @@ public class ArielCalenderTransfer {
   }
 
   private void logExecutionInfo(@NonNull final String googleCalendarId,
-      @NonNull final YearMonth targetYearMonth, @NonNull int range,
+      @NonNull final YearMonth targetYearMonth, final int range,
       @NonNull final List<EventContainer> insList, @NonNull final List<EventContainer> updList,
       @NonNull final List<EventContainer> delList) {
 
@@ -171,7 +146,10 @@ public class ArielCalenderTransfer {
     log.info(StringUtils.repeat('-', Constants.SEP_LENGTH));
     log.info("Parameters");
     log.info(StringUtils.repeat('-', Constants.SEP_LENGTH));
-    this.arielCalendarLoader.getConnectionInformation(Constants.KEY_LENGTH).forEach(log::info);
+    this.calendarLoader.getConnectionInfo().entrySet().stream().map(entry ->
+        String.format("%-" + Constants.KEY_LENGTH + "s: %s", entry.getKey(), entry.getValue())
+    ).forEach(log::info);
+//    this.calendarLoader.getConnectionInformation(Constants.KEY_LENGTH).forEach(log::info);
     log.info(
         String.format("%-" + Constants.KEY_LENGTH + "s: %s", "Google Calendar CalendarId",
             googleCalendarId));

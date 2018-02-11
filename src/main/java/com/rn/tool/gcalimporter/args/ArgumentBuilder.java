@@ -2,6 +2,8 @@ package com.rn.tool.gcalimporter.args;
 
 import java.nio.file.Paths;
 import java.util.Optional;
+import lombok.NonNull;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -16,6 +18,7 @@ import org.apache.commons.cli.ParseException;
  * Class of Argument's Processor
  */
 @Slf4j
+@UtilityClass
 public class ArgumentBuilder {
 
   /**
@@ -24,7 +27,7 @@ public class ArgumentBuilder {
    * @param args argument passed from Main Class
    * @return Argument object
    */
-  public static Optional<Argument> proceed(String... args) {
+  public static Optional<Argument> proceed(@NonNull final String... args) {
 
     final Options options = new Options();
     options.addOption(
@@ -57,7 +60,6 @@ public class ArgumentBuilder {
         throw new RuntimeException(e);
 
       }
-
     }
   }
 }

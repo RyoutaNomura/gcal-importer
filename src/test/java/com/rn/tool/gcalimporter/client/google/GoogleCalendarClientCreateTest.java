@@ -20,9 +20,9 @@ public class GoogleCalendarClientCreateTest {
 
   private static final String APPLICATION_NAME = GoogleCalendarClientCreateTest.class.getName();
 
-  private static final Path DATA_STORE_DIR = Paths.get(
-      System.getProperty("user.dir"), "src/main/resources");
-  private static final Path CLIENT_SECRET = Paths.get("client_secret.json");
+  private static final Path DATA_STORE_DIR = Paths.get(System.getProperty("user.dir"));
+  private static final Path CLIENT_SECRET = Paths
+      .get(System.getProperty("user.dir"), "client_secret.json");
 
   private static final List<String> calendarIds = Lists.newArrayList();
   private static GoogleCalendarClient client;

@@ -4,6 +4,7 @@ import java.time.YearMonth;
 import java.util.Arrays;
 import java.util.Optional;
 import lombok.Getter;
+import lombok.NonNull;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -18,14 +19,14 @@ public enum ReservedWord {
    * String Representation
    */
   @Getter
-  private String str;
+  private final String str;
 
   /**
    * Constructor
    *
    * @param str String representation
    */
-  private ReservedWord(String str) {
+  ReservedWord(@NonNull final String str) {
     this.str = str;
   }
 
@@ -35,8 +36,9 @@ public enum ReservedWord {
    * @param str checking target
    * @return true if it is reserved word
    */
-  public static boolean isReservedWord(String str) {
-    return Arrays.stream(ReservedWord.values()).map(ReservedWord::getStr).count() != 0;
+  public static boolean isReservedWord(@NonNull final String str) {
+    return Arrays.stream(ReservedWord.values()).map(ReservedWord::getStr)
+        .filter(s -> StringUtils.equals(s, str)).count() != 0;
   }
 
   /**
@@ -44,7 +46,7 @@ public enum ReservedWord {
    *
    * @return converted {@link ReservedWord} as Optional
    */
-  public static Optional<ReservedWord> fromString(String str) {
+  public static Optional<ReservedWord> fromString(@NonNull final String str) {
     return Arrays.stream(ReservedWord.values()).filter(r -> StringUtils.equals(r.getStr(), str))
         .findFirst();
   }

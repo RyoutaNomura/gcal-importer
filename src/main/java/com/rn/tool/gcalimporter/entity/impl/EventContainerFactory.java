@@ -2,6 +2,7 @@ package com.rn.tool.gcalimporter.entity.impl;
 
 import com.google.api.services.calendar.model.Event;
 import com.rn.tool.gcalimporter.entity.EventContainer;
+import lombok.NonNull;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 
 /**
@@ -16,7 +17,8 @@ public class EventContainerFactory {
    * @param event Google Calendar Event
    * @return Implemented Class of {@link EventContainer}
    */
-  public static EventContainer create(EventContainerType ecType, Event event) {
+  public static EventContainer create(@NonNull final EventContainerType ecType,
+      @NonNull final Event event) {
     switch (ecType) {
       case Raw:
         return new EventContainerGcalRawImpl(event);
@@ -34,7 +36,8 @@ public class EventContainerFactory {
    * @param component Calendar Component
    * @return Implemented Class of {@link EventContainer}
    */
-  public static EventContainer create(EventContainerType ecType, CalendarComponent component) {
+  public static EventContainer create(@NonNull final EventContainerType ecType,
+      @NonNull final CalendarComponent component) {
     switch (ecType) {
       case Raw:
         return new EventContainerGcalRawImpl(component);

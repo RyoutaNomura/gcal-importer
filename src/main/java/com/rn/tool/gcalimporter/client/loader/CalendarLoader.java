@@ -2,6 +2,8 @@ package com.rn.tool.gcalimporter.client.loader;
 
 import java.time.YearMonth;
 import java.util.List;
+import java.util.Map;
+import lombok.NonNull;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 
 /**
@@ -15,7 +17,7 @@ public interface CalendarLoader {
    * @param yearMonth Target year and month of retrieve
    * @param range Acquisition range starting from yearMonth
    */
-  List<CalendarComponent> loadCalendar(final YearMonth yearMonth, final int range);
+  List<CalendarComponent> loadCalendar(@NonNull final  YearMonth yearMonth, @NonNull final  int range);
 
   /**
    * Method for verify authentication
@@ -27,8 +29,7 @@ public interface CalendarLoader {
   /**
    * Method for generate connection information as String
    *
-   * @param keyLength left margin
-   * @return String of connection information
+   * @return Map of connection information
    */
-  List<String> getConnectionInformation(final int keyLength);
+  Map<String, String> getConnectionInfo();
 }

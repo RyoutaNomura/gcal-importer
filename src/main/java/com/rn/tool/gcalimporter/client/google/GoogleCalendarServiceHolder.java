@@ -51,7 +51,7 @@ class GoogleCalendarServiceHolder {
   @Builder
   private GoogleCalendarServiceHolder(@NonNull final String applicationName,
       @NonNull final Path clientSecret, @NonNull final Path dataStoreDir,
-      @NonNull final List<String> scopes, @NonNull final int timeout) {
+      @NonNull final List<String> scopes, final int timeout) {
     this.applicationName = applicationName;
     this.clientSecret = clientSecret;
     this.dataStoreDir = dataStoreDir;

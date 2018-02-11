@@ -18,14 +18,17 @@ import java.util.UUID;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
+@RunWith(JUnit4.class)
 public class GoogleCalendarClientTest {
 
   private static final String APPLICATION_NAME = GoogleCalendarClientTest.class.getName();
 
-  private static final Path DATA_STORE_DIR = Paths
-      .get(System.getProperty("user.dir"), "src/main/resources");
-  private static final Path CLIENT_SECRET = Paths.get("client_secret.json");
+  private static final Path DATA_STORE_DIR = Paths.get(System.getProperty("user.dir"));
+  private static final Path CLIENT_SECRET = Paths
+      .get(System.getProperty("user.dir"), "client_secret.json");
 
   private static String GOOGLE_CALENDAR_ID;
 

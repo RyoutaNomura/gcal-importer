@@ -7,6 +7,8 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import lombok.NonNull;
+import lombok.experimental.UtilityClass;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
@@ -17,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * Class of utility for converting {@link net.fortuna.ical4j.model.component.CalendarComponent}
  */
+@UtilityClass
 public class CalendarComponentUtils {
 
   /**
@@ -34,7 +37,7 @@ public class CalendarComponentUtils {
    * @param comp target calendar component
    * @return true if it is all day event
    */
-  public static boolean isAllDayEvent(final Component comp) {
+  public static boolean isAllDayEvent(@NonNull final Component comp) {
 
     final PropertyList<Property> p = comp.getProperties();
     final Parameter sdtValue = p.getProperty(Property.DTSTART).getParameter(Parameter.VALUE);
@@ -47,7 +50,7 @@ public class CalendarComponentUtils {
    * @param comp target calendar component
    * @return start date time extracted from {@link Component}
    */
-  public static ZonedDateTime getDttmStart(final Component comp) {
+  public static ZonedDateTime getDttmStart(@NonNull final Component comp) {
     if (isAllDayEvent(comp)) {
       throw new RuntimeException(
           "Cannot convert to ZonedDateTime: " + System.lineSeparator() + comp);
@@ -65,7 +68,7 @@ public class CalendarComponentUtils {
    * @param comp target calendar component
    * @return start date extracted from {@link Component}
    */
-  public static LocalDate getDtStart(final Component comp) {
+  public static LocalDate getDtStart(@NonNull final Component comp) {
     if (!isAllDayEvent(comp)) {
       throw new RuntimeException("Cannot convert to LocalDate: " + System.lineSeparator() + comp);
     }
@@ -82,7 +85,7 @@ public class CalendarComponentUtils {
    * @param comp target calendar component
    * @return end date time extracted from {@link Component}
    */
-  public static ZonedDateTime getDttmEnd(final Component comp) {
+  public static ZonedDateTime getDttmEnd(@NonNull final Component comp) {
     if (isAllDayEvent(comp)) {
       throw new RuntimeException(
           "Cannot convert to ZonedDateTime: " + System.lineSeparator() + comp);
@@ -100,7 +103,7 @@ public class CalendarComponentUtils {
    * @param comp target calendar component
    * @return end date extracted from {@link Component}
    */
-  public static LocalDate getDtEnd(final Component comp) {
+  public static LocalDate getDtEnd(@NonNull final Component comp) {
     if (!isAllDayEvent(comp)) {
       throw new RuntimeException("Cannot convert to LocalDate. " + System.lineSeparator() + comp);
     }
@@ -119,8 +122,8 @@ public class CalendarComponentUtils {
    * @param c CalendarComponent to check
    * @return true if CalendarComponent is in target year month
    */
-  public static boolean isInTargetYearMonth(final YearMonth target, final int range,
-      final CalendarComponent c) {
+  public static boolean isInTargetYearMonth(@NonNull final YearMonth target, final int range,
+      @NonNull final CalendarComponent c) {
 
     if (isAllDayEvent(c)) {
 

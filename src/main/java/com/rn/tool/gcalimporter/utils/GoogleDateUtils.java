@@ -11,11 +11,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.TimeZone;
+import lombok.NonNull;
+import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.StringUtils;
 
 /**
  * Class of utility for Google API Date
  */
+@UtilityClass
 public class GoogleDateUtils {
 
   /**
@@ -25,7 +28,7 @@ public class GoogleDateUtils {
    * @param zone zone
    * @return converted {@link DateTime}
    */
-  public static DateTime fromLocalDateTimeToDateTime(final LocalDateTime datetime,
+  public static DateTime fromLocalDateTimeToDateTime(@NonNull final LocalDateTime datetime,
       final ZoneId zone) {
     final ZonedDateTime zdt = datetime.atZone(zone);
     return fromZonedDateTimeToDateTime(zdt);
@@ -37,7 +40,7 @@ public class GoogleDateUtils {
    * @param datetime target
    * @return converted {@link DateTime}
    */
-  public static DateTime fromZonedDateTimeToDateTime(final ZonedDateTime datetime) {
+  public static DateTime fromZonedDateTimeToDateTime(@NonNull final ZonedDateTime datetime) {
     final java.util.Date date = Date.from(datetime.toInstant());
     final TimeZone tz = TimeZone.getTimeZone(datetime.getZone());
     return new DateTime(date, tz);
@@ -51,7 +54,8 @@ public class GoogleDateUtils {
    * @param zone zone
    * @return converted {@link EventDateTime}
    */
-  public static EventDateTime parseAsDttm(final String text, final DateTimeFormatter formatter,
+  public static EventDateTime parseAsDttm(@NonNull final String text,
+      @NonNull final DateTimeFormatter formatter,
       final ZoneId zone) {
     final LocalDateTime ldt = LocalDateTime.parse(text, formatter);
     return fromLocalDateTimeToEventDateTime(ldt, zone);
@@ -64,7 +68,8 @@ public class GoogleDateUtils {
    * @param zone zone
    * @return converted {@link EventDateTime}
    */
-  public static EventDateTime fromLocalDateTimeToEventDateTime(final LocalDateTime datetime,
+  public static EventDateTime fromLocalDateTimeToEventDateTime(
+      @NonNull final LocalDateTime datetime,
       final ZoneId zone) {
     return fromZonedDateTimeToEventDateTime(datetime.atZone(zone));
   }
@@ -75,7 +80,8 @@ public class GoogleDateUtils {
    * @param datetime target
    * @return converted {@link EventDateTime}
    */
-  public static EventDateTime fromZonedDateTimeToEventDateTime(final ZonedDateTime datetime) {
+  public static EventDateTime fromZonedDateTimeToEventDateTime(
+      @NonNull final ZonedDateTime datetime) {
     final java.util.Date date = Date.from(datetime.toInstant());
     final TimeZone tz = TimeZone.getTimeZone(datetime.getZone());
     final DateTime dttm = new DateTime(date, tz);
@@ -90,7 +96,8 @@ public class GoogleDateUtils {
    * @param formatter formatter
    * @return converted {@link EventDateTime}
    */
-  public static EventDateTime parseAsDate(final String text, final DateTimeFormatter formatter) {
+  public static EventDateTime parseAsDate(@NonNull final String text,
+      @NonNull final DateTimeFormatter formatter) {
     final LocalDate ldt = LocalDate.parse(text, formatter);
     return fromLocalDateToEventDate(ldt);
   }
@@ -101,7 +108,7 @@ public class GoogleDateUtils {
    * @param ldt target
    * @return converted {@link EventDateTime}
    */
-  public static EventDateTime fromLocalDateToEventDate(final LocalDate ldt) {
+  public static EventDateTime fromLocalDateToEventDate(@NonNull final LocalDate ldt) {
     final DateTime dt = new DateTime(true,
         ldt.atStartOfDay(ZoneId.of("GMT")).toInstant().toEpochMilli(), 0);
     return new EventDateTime().setDate(dt);
@@ -114,7 +121,7 @@ public class GoogleDateUtils {
    * @param dttm2 B
    * @return 1 if A is greater than B, 0 if A is equal to B, -1 if A is smaller than B
    */
-  public static int compare(final DateTime dttm1, final DateTime dttm2) {
+  public static int compare(@NonNull final DateTime dttm1, @NonNull final DateTime dttm2) {
     return Comparator.comparing(DateTime::getValue).compare(dttm1, dttm2);
   }
 
@@ -125,20 +132,17 @@ public class GoogleDateUtils {
    * @param dttm target date to check
    * @return true if it is contained
    */
-  public static boolean contains(final YearMonth yearMonth, final EventDateTime dttm) {
+  public static boolean contains(@NonNull final YearMonth yearMonth,
+      @NonNull final EventDateTime dttm) {
 
-    if (dttm == null) {
-      throw new RuntimeException("dttm should not be null");
-    }
-
-    Date date;
+    final Date date;
     if (dttm.getDate() != null) {
       date = new Date(dttm.getDate().getValue());
     } else {
       date = new Date(dttm.getDateTime().getValue());
     }
 
-    ZoneId zone;
+    final ZoneId zone;
     if (StringUtils.isNotEmpty(dttm.getTimeZone())) {
       zone = ZoneId.of(dttm.getTimeZone());
     } else {
@@ -157,7 +161,7 @@ public class GoogleDateUtils {
    * @param b B
    * @return true if A is equal to B
    */
-  public static boolean equals(final EventDateTime a, final EventDateTime b) {
+  public static boolean equals(@NonNull final EventDateTime a, @NonNull final EventDateTime b) {
     if ((a == null) && (b == null)) {
       return true;
     }

@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
@@ -29,8 +30,9 @@ class ObjectMapper {
    * @param propValConsumer {@link Consumer} called after value converted
    * @param <E> type of mapped value
    */
-  private static <E> void map(final PropertyList<Property> props, final String propName,
-      final Function<Property, E> mapper, final Consumer<E> propValConsumer) {
+  private static <E> void map(@NonNull final PropertyList<Property> props,
+      @NonNull final String propName, @NonNull final Function<Property, E> mapper,
+      @NonNull final Consumer<E> propValConsumer) {
     try {
       Optional.ofNullable(props.getProperty(propName))
           .ifPresent(p -> propValConsumer.accept(mapper.apply(p)));
@@ -51,9 +53,10 @@ class ObjectMapper {
    * @param propValConsumer {@link Consumer} called after the value converted
    * @param <E> type of mapped value
    */
-  public static <E> void map(final PropertyList<Property> props, final String propName1,
-      final String propName2,
-      final BiFunction<Property, Property, E> mapper, final Consumer<E> propValConsumer) {
+  public static <E> void map(@NonNull final PropertyList<Property> props,
+      @NonNull final String propName1, @NonNull final String propName2,
+      @NonNull final BiFunction<Property, Property, E> mapper,
+      @NonNull final Consumer<E> propValConsumer) {
     final Property prop1 = props.getProperty(propName1);
     final Property prop2 = props.getProperty(propName2);
     propValConsumer.accept(mapper.apply(prop1, prop2));
@@ -66,8 +69,8 @@ class ObjectMapper {
    * @param propName target property's name
    * @param propValConsumer {@link Consumer} called after the valued converted
    */
-  public static void mapString(final PropertyList<Property> props, final String propName,
-      final Consumer<String> propValConsumer) {
+  public static void mapString(@NonNull final PropertyList<Property> props,
+      @NonNull final String propName, @NonNull final Consumer<String> propValConsumer) {
     ObjectMapper.map(props, propName, Property::getValue, propValConsumer);
   }
 
@@ -78,8 +81,8 @@ class ObjectMapper {
    * @param propName target property's name
    * @param propValConsumer {@link Consumer} called after the valued converted
    */
-  public static void mapEventDateTime(final PropertyList<Property> props, final String propName,
-      final Consumer<EventDateTime> propValConsumer) {
+  public static void mapEventDateTime(@NonNull final PropertyList<Property> props,
+      @NonNull final String propName, @NonNull final Consumer<EventDateTime> propValConsumer) {
     ObjectMapper.map(
         props,
         propName,
@@ -98,8 +101,8 @@ class ObjectMapper {
    * @param propName target property's name
    * @param propValConsumer {@link Consumer} called after the valued converted
    */
-  public static void mapEventDate(final PropertyList<Property> props, final String propName,
-      final Consumer<EventDateTime> propValConsumer) {
+  public static void mapEventDate(@NonNull final PropertyList<Property> props,
+      @NonNull final String propName, @NonNull final Consumer<EventDateTime> propValConsumer) {
     ObjectMapper.map(
         props,
         propName,
@@ -117,8 +120,8 @@ class ObjectMapper {
    * @param propName target property's name
    * @param propValConsumer {@link Consumer} called after the valued converted
    */
-  public static void mapBigDecimal(final PropertyList<Property> props, final String propName,
-      final Consumer<BigDecimal> propValConsumer) {
+  public static void mapBigDecimal(@NonNull final PropertyList<Property> props,
+      @NonNull final String propName, @NonNull final Consumer<BigDecimal> propValConsumer) {
     ObjectMapper.map(props, propName, p -> new BigDecimal(p.getValue()), propValConsumer);
   }
 }
