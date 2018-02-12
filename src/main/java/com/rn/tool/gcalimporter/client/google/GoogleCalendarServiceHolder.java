@@ -11,12 +11,14 @@ import java.nio.file.Path;
 import java.security.GeneralSecurityException;
 import java.util.List;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NonNull;
 
 /**
  * Class to hold service object's instance of Google Calendar
  */
-class GoogleCalendarServiceHolder {
+@Data
+public class GoogleCalendarServiceHolder {
 
   /**
    * Application name of OAuth client id

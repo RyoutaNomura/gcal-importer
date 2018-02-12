@@ -28,6 +28,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import jersey.repackaged.com.google.common.collect.Lists;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
@@ -59,6 +60,7 @@ public class GoogleCalendarClient {
   /**
    * Instance of the holder of GoogleCalendarService
    */
+  @Getter
   private final GoogleCalendarServiceHolder calendarService;
 
   /**
