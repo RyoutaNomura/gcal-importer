@@ -17,6 +17,7 @@ public class GoogleCalendarClientProvider implements Provider<GoogleCalendarClie
   public GoogleCalendarClient get() {
     return new GoogleCalendarClient(setting.getApplicationName(),
         setting.getClientSecret(),
-        setting.getDataStoreDir());
+        setting.getDataStoreDir(),
+        setting.getGoogleUserId());
   }
 }

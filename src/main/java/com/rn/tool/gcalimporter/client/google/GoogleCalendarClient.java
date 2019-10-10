@@ -69,13 +69,15 @@ public class GoogleCalendarClient {
    * @param applicationName Name of application which is used to access to google calendar
    * @param dataStoreDir Path to store credential
    * @param clientSecret Path to client_secret.json
+   * @param userId target User ID
    */
   public GoogleCalendarClient(@NonNull final String applicationName,
-      @NonNull final Path clientSecret, @NonNull final Path dataStoreDir) {
+      @NonNull final Path clientSecret, @NonNull final Path dataStoreDir, @NonNull final String userId) {
     this.calendarService = GoogleCalendarServiceHolder.builder()
         .applicationName(applicationName)
         .clientSecret(clientSecret)
         .dataStoreDir(dataStoreDir)
+        .userId(userId)
         .scopes(SCOPES)
         .timeout(TIME_OUT)
         .build();

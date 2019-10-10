@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.net.URI;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -28,6 +27,9 @@ public class Setting {
 
   @JsonProperty("password")
   private String password;
+
+  @JsonProperty("googleUserId")
+  private String googleUserId;
 
   @JsonProperty("googleCalendarId")
   private String googleCalendarId;
@@ -54,12 +56,9 @@ public class Setting {
     if (isSpecifyTargetYearMonth) {
       return specificTargetYearMonth != null ? YearMonth.parse(specificTargetYearMonth, YEAR_MONTH_FMT) : YearMonth.now();
     } else {
-      Optional<ReservedWord> res = ReservedWord.fromString(targetYearMonthType);
-      if (res.isPresent()) {
-        return res.get().getYearMonth();
-      } else {
-        throw new RuntimeException("targetYearMonthType: " + targetYearMonthType + " is not reserved word");
-      }
+      return ReservedWord.fromString(targetYearMonthType)
+          .orElseThrow(() -> new RuntimeException("targetYearMonthType: " + targetYearMonthType + " is not reserved word")      )
+          .getYearMonth();
     }
   }
 

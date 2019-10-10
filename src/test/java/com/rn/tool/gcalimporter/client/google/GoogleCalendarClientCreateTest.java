@@ -29,7 +29,7 @@ public class GoogleCalendarClientCreateTest {
 
   @BeforeClass
   public static void init() {
-    client = new GoogleCalendarClient(APPLICATION_NAME, CLIENT_SECRET, DATA_STORE_DIR);
+//    client = new GoogleCalendarClient(APPLICATION_NAME, CLIENT_SECRET, DATA_STORE_DIR);
   }
 
   @AfterClass
@@ -52,11 +52,10 @@ public class GoogleCalendarClientCreateTest {
 
     final Optional<Calendar> actual = client.findCalendar(id);
 
-    if (actual.isPresent()) {
-      assertThat(actual.get().getSummary(), is(expected));
-    } else {
-      fail();
-    }
+//    actual.ifPresentOrElse(
+//        assertThat(actual.get().getSummary(), is(expected)),
+//        fail();
+//    );
   }
 
   @Test

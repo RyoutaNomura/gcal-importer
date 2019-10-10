@@ -35,7 +35,7 @@ public class GoogleAuthorizationUtils {
    */
   public static Credential authorize(@NonNull final Path clientSecret,
       @NonNull final Path dataStoreDir,
-      final List<String> scopes) {
+      final List<String> scopes, String userId) {
 
     try (InputStream in = Files.newInputStream(clientSecret)) {
 
@@ -53,7 +53,7 @@ public class GoogleAuthorizationUtils {
           .setAccessType("offline")
           .build();
       final Credential credential = new AuthorizationCodeInstalledApp(
-          flow, new LocalServerReceiver()).authorize("user");
+          flow, new LocalServerReceiver()).authorize(userId);
       log.info("Credentials saved to " + dataStoreDir.toAbsolutePath());
 
       return credential;

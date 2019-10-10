@@ -41,6 +41,11 @@ public class GoogleCalendarServiceHolder {
   private final List<String> scopes;
 
   /**
+   * Target User ID
+   */
+  private final String userId;
+
+  /**
    * Timeout for GoogleCalendarService
    */
   private final int timeout;
@@ -53,11 +58,12 @@ public class GoogleCalendarServiceHolder {
   @Builder
   private GoogleCalendarServiceHolder(@NonNull final String applicationName,
       @NonNull final Path clientSecret, @NonNull final Path dataStoreDir,
-      @NonNull final List<String> scopes, final int timeout) {
+      @NonNull final List<String> scopes, @NonNull final String userId, @NonNull  final int timeout) {
     this.applicationName = applicationName;
     this.clientSecret = clientSecret;
     this.dataStoreDir = dataStoreDir;
     this.scopes = scopes;
+    this.userId = userId;
     this.timeout = timeout;
   }
 
@@ -81,7 +87,7 @@ public class GoogleCalendarServiceHolder {
       final HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
       final JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
       final Credential credential = GoogleAuthorizationUtils
-          .authorize(this.clientSecret, this.dataStoreDir, this.scopes);
+          .authorize(this.clientSecret, this.dataStoreDir, this.scopes, userId);
 
       this.calendar = new com.google.api.services.calendar.Calendar.Builder(
           httpTransport,

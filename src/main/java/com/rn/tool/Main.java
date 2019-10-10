@@ -77,6 +77,7 @@ public class Main {
         .applicationName(GOOGLE_APPLICATION_NAME)
         .clientSecret(Paths.get(setting.getClientSecretJsonPath()))
         .dataStoreDir(Paths.get(setting.getDataStoreDir()))
+        .googleUserId(setting.getGoogleUserId())
         .build();
 
     Injector injector = Guice.createInjector(new AbstractModule() {
